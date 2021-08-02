@@ -21,7 +21,11 @@ model = PipelineModel.load("production_model_3")
 
 tweets = spark.readStream.format("kafka").option(
     "kafka.bootstrap.servers", "localhost:9092"
-).option("subscribe", "test").load()
+).option(
+    "subscribe", "raw_tweets"
+).option(
+    "failOnDataLoss", "false"
+).load()
 
 tweets_txt = tweets.selectExpr("CAST(value AS STRING)")
 

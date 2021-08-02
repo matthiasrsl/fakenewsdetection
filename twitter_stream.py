@@ -1,15 +1,23 @@
 from pytwitter import StreamApi
+from kafka import KafkaProducer
 
 
-class MyStream(StreamApi):
+class KafkaTwitterStream(StreamApi):
+    def __init__(self, bootstrap_servers, topic, bearer_token):
+        StreamApi.__init__(self, bearer_token=bearer_token)
+        self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
+        self.topic = topic
+
     def on_tweet(self, tweet):
-        print(f"{tweet.id}|{tweet.lang}|{tweet.text}")
+        self.producer.send(self.topic, tweet.text.encode("utf-8"))
 
     def on_error(self, code):
         print(f"ERROR {code}")
 
 
-stream = MyStream(
+stream = KafkaTwitterStream(
+    "localhost:9092",
+    "raw_tweets",
     bearer_token="AAAAAAAAAAAAAAAAAAAAANUlPgEAAAAA3n%2B61l0gpELzltUuU68CusMSFy4%3D6jmJKTf0VRzglbq4KgQQfNTGaUqAueQ06WtDUcoTLi4jiq4ajI"
 )
 
