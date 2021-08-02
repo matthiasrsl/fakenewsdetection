@@ -1,4 +1,6 @@
 from pytwitter import StreamApi
+from pytwitter import models as md
+
 from kafka import KafkaProducer
 
 
@@ -8,8 +10,14 @@ class KafkaTwitterStream(StreamApi):
         self.producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
         self.topic = topic
 
-    def on_tweet(self, tweet):
-        self.producer.send(self.topic, tweet.text.encode("utf-8"))
+    def on_data(self, raw_data, return_json=False):
+        """
+        :param raw_data: Response data by twitter api.
+        :param return_json:
+        :return:
+        """
+        #data = json.loads(raw_data)
+        self.producer.send(self.topic, raw_data)
 
     def on_error(self, code):
         print(f"ERROR {code}")
@@ -35,13 +43,14 @@ delete_rules = {
     }
 }
 
-# validate rules
-#stream.manage_rules(rules=delete_rules, dry_run=False)
 
 stream.manage_rules(rules=add_rules, dry_run=False)
 
-# get tweets
 
-#print(stream.get_rules())
-
-stream.search_stream()
+stream.search_stream(
+    tweet_fields=["text", "created_at"],
+    expansions=["author_id"])
+'''user_fields=["name", "screen_name"],
+    return_json=True
+)
+'''
