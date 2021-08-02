@@ -1,0 +1,2 @@
+python-twitter-v2
+kafka-python
