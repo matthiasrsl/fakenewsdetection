@@ -1,6 +1,8 @@
 # Fake News Detection
 
 ## Install
+A Hadoop cluster with Spark 2.4.8 is required.
+
 Make sure to place the following files on HDFS:
 - `production_model_3/`
 - `raw_data_sample.json`
