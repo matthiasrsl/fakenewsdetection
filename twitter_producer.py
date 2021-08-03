@@ -16,7 +16,6 @@ class KafkaTwitterStream(StreamApi):
         :param return_json:
         :return:
         """
-        #data = json.loads(raw_data)
         self.producer.send(self.topic, raw_data)
 
     def on_error(self, code):
