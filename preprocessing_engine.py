@@ -53,7 +53,7 @@ query = preprocessed_tweets.selectExpr(
 ).writeStream.format("kafka").option(
     "kafka.bootstrap.servers", "localhost:9092"
 ).option("topic", "preprocessed_tweets").outputMode("append").option(
-    "checkpointLocation", "./checkpoint"
+    "checkpointLocation", "./checkpoint_preprocessing"
 ).start()
 
 

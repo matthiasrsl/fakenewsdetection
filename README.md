@@ -7,6 +7,13 @@ Make sure to place the following files on HDFS:
 - `production_model_3/`
 - `raw_data_sample.json`
 
+```sh
+$ cd models/
+$ hdfs dfs -put production_model_3
+$ cd ..
+$ hdfs dfs -put raw_data_sample.json
+```
+
 ## Commands (for development)
 
 ```
