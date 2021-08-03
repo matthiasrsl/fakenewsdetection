@@ -57,6 +57,6 @@ query = preprocessed_tweets.selectExpr(
 ).start()
 
 
-time.sleep(25)
+time.sleep(60)
 
 query.stop()

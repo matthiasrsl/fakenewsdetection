@@ -1,7 +1,20 @@
 # Fake News Detection
 
 ## Install
-A Hadoop cluster with Spark 2.4.8 is required.
+A Hadoop cluster with Spark 2.4.8 and Python 3.6 is required.
+
+```sh
+$ sudo apt install software-properties-common  # To install command 'add-apt-repository'
+$ sudo add-apt-repository ppa:deadsnakes/ppa  # To get python3.6 on Ubuntu 20.04
+$ sudo apt update
+$ sudo apt install python3.6
+```
+
+And edit ~/.bashrc to add:
+```sh
+export PYSPARK_PYTHON=python3.6
+export PYSPARK_DRIVER_PYTHON=python3.6
+```
 
 Make sure to place the following files on HDFS:
 - `production_model_3/`

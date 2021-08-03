@@ -6,12 +6,13 @@ from pyspark.sql.types import *
 
 import numpy as np
 from pyspark.ml import PipelineModel
-import pandas as pd
+
+import numpy as np
 
 
 @F.udf(returnType=StringType())
 def format_output(prediction):
-    return "FAKE NEWS" if prediction else "FACT"
+    return "FAKE" if prediction else "REAL"
 
 preprocessed_tweets_schema = StructType([
     StructField("tweet_id", StringType(), False),
@@ -41,9 +42,15 @@ tweets_txt = tweets.selectExpr(
     "nested_value.*"
 )
 
-predictions = model.transform(tweets_txt).drop("words", "filtered", "features") # The intermediate columns created by the model are not intereting.
+predictions = model.transform(tweets_txt)
 
-query = predictions.selectExpr(
+predictions_formatted = predictions.withColumn(
+    "class", format_output(F.col("prediction"))
+).drop(  # The intermediate columns created by the model are not intereting.
+    "words", "filtered", "features", "rawPrediction" 
+)
+
+query = predictions_formatted.selectExpr(
     "to_json(struct(*)) AS value"
 ).writeStream.format("kafka").option(
     "kafka.bootstrap.servers", "localhost:9092"
@@ -51,6 +58,6 @@ query = predictions.selectExpr(
     "checkpointLocation", "./checkpoint_prediction"
 ).start()
 
-time.sleep(25)
+time.sleep(60)
 
 query.stop()
