@@ -4,6 +4,7 @@ from pyspark.sql.types import *
 
 from preprocessing_engine import get_preprocessing_writer
 from prediction_engine import get_prediction_writer
+from postprocessing_engine import get_postprocessing_writer
 from twitter_producer import KafkaTwitterStream
 
 
@@ -18,9 +19,11 @@ if __name__ == "__main__":
 
     preprocessing_writer = get_preprocessing_writer(spark)
     prediction_writer = get_prediction_writer(spark)
+    postprocessing_writer = get_postprocessing_writer(spark)
 
     preprocessing_query = preprocessing_writer.start()
     prediction_query = prediction_writer.start()
+    postprocessing_query = postprocessing_writer.start()
 
     try:
         stream.search_stream(
@@ -30,6 +33,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         preprocessing_query.stop()
         prediction_query.stop()
+        postprocessing_query.stop()
 
 
 
