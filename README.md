@@ -27,6 +27,23 @@ $ cd ..
 $ hdfs dfs -put raw_data_sample.json
 ```
 
+## Running (WIP)
+Starting ElasticSearch and Kibana if they are not running:
+```
+sudo systemctl start elasticsearch.service
+sudo systemctl start kibana.service
+```
+
+Start Kafka Connect if not already running:
+```
+../kafka/bin/connect-standalone.sh ../kafka/config/connect-standalone.properties
+```
+
+Run the program:
+```
+../spark248/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.8 org.apache.spark:spark-avro:3.1.1 --master yarn ./main.py
+```
+
 ## Commands (for development)
 
 ```
@@ -41,3 +58,4 @@ python3 twitter_producer.py
 ## Todo
 - Remove environment variables from code
 - Fix the streaming queries not closed properly
+- Add the tweet id as key in Kafka records.
