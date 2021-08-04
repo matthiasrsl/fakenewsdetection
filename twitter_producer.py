@@ -20,20 +20,4 @@ class KafkaTwitterStream(StreamApi):
 
     def on_error(self, code):
         print(f"ERROR {code}")
-
-
-
-
-add_rules = {
-    "add": [
-        {"value": "(COVID OR covid OR coronavirus) lang:en -is:retweet -is:reply", "tag": "covid EN tweets"},
-    ]
-}
-
-delete_rules = {
-    "delete": {
-        "ids": [
-            
-        ]
-    }
-}
+        
