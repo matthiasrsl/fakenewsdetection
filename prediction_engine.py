@@ -22,42 +22,45 @@ preprocessed_tweets_schema = StructType([
     StructField("text", StringType(), False),
 ])
 
-spark = SparkSession.builder.appName("fakenewsdetection").getOrCreate()
+def get_prediction_writer(spark):
+    """
+    Builds and return the streaming writer to preprocess the tweets.
+    Arguments:
+    * spark: The SparkSession object
+    """
 
-model = PipelineModel.load("production_model_3")
+    model = PipelineModel.load("production_model_3")
 
-tweets = spark.readStream.format("kafka").option(
-    "kafka.bootstrap.servers", "localhost:9092"
-).option(
-    "subscribe", "preprocessed_tweets"
-).option(
-    "failOnDataLoss", "false"
-).load()
+    tweets = spark.readStream.format("kafka").option(
+        "kafka.bootstrap.servers", "localhost:9092"
+    ).option(
+        "subscribe", "preprocessed_tweets"
+    ).option(
+        "failOnDataLoss", "false"
+    ).load()
 
-tweets_txt = tweets.selectExpr(
-    "CAST(value AS STRING)"
-).select(
-    F.from_json(F.col("value"), preprocessed_tweets_schema).alias("nested_value")
-).select(
-    "nested_value.*"
-)
+    tweets_txt = tweets.selectExpr(
+        "CAST(value AS STRING)"
+    ).select(
+        F.from_json(F.col("value"), preprocessed_tweets_schema).alias("nested_value")
+    ).select(
+        "nested_value.*"
+    )
 
-predictions = model.transform(tweets_txt)
+    predictions = model.transform(tweets_txt)
 
-predictions_formatted = predictions.withColumn(
-    "class", format_output(F.col("prediction"))
-).drop(  # The intermediate columns created by the model are not intereting.
-    "words", "filtered", "features", "rawPrediction" 
-)
+    predictions_formatted = predictions.withColumn(
+        "class", format_output(F.col("prediction"))
+    ).drop(  # The intermediate columns created by the model are not intereting.
+        "words", "filtered", "features", "rawPrediction" 
+    )
 
-query = predictions_formatted.selectExpr(
-    "to_json(struct(*)) AS value"
-).writeStream.format("kafka").option(
-    "kafka.bootstrap.servers", "localhost:9092"
-).option("topic", "test2").outputMode("append").option(
-    "checkpointLocation", "./checkpoint_prediction"
-).start()
+    writer = predictions_formatted.selectExpr(
+        "to_json(struct(*)) AS value"
+    ).writeStream.format("kafka").option(
+        "kafka.bootstrap.servers", "localhost:9092"
+    ).option("topic", "predictions").outputMode("append").option(
+        "checkpointLocation", "./checkpoint_prediction"
+    )
 
-time.sleep(60)
-
-query.stop()
+    return writer

@@ -34,5 +34,10 @@ $ hdfs dfs -put raw_data_sample.json
 
 python3 twitter_producer.py
 
-../spark248/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.8 --master yarn ./preprocessing_engine.py
+../spark248/bin/spark-submit --packages org.apache.spark:spark-sql-kafka-0-10_2.11:2.4.8 --master yarn ./main.py
 ```
+
+
+## Todo
+- Remove environment variables from code
+- Fix the streaming queries not closed properly

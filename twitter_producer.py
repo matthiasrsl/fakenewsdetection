@@ -22,11 +22,7 @@ class KafkaTwitterStream(StreamApi):
         print(f"ERROR {code}")
 
 
-stream = KafkaTwitterStream(
-    "localhost:9092",
-    "raw_tweets",
-    bearer_token="AAAAAAAAAAAAAAAAAAAAANUlPgEAAAAA3n%2B61l0gpELzltUuU68CusMSFy4%3D6jmJKTf0VRzglbq4KgQQfNTGaUqAueQ06WtDUcoTLi4jiq4ajI"
-)
+
 
 add_rules = {
     "add": [
@@ -41,15 +37,3 @@ delete_rules = {
         ]
     }
 }
-
-
-stream.manage_rules(rules=add_rules, dry_run=False)
-
-
-stream.search_stream(
-    tweet_fields=["text", "created_at"],
-    expansions=["author_id"])
-'''user_fields=["name", "screen_name"],
-    return_json=True
-)
-'''
