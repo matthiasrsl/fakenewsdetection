@@ -1,5 +1,7 @@
 # Fake News Detection
 
+![Kibana screenshot](docs/screenshot_kibana_1.png)
+
 ## Install
 A Hadoop cluster with Spark 2.4.8 and Python 3.6 is required.
 
