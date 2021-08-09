@@ -38,7 +38,7 @@ sudo systemctl start kibana.service
 
 Start Kafka Connect if not already running:
 ```
-../kafka/bin/connect-standalone.sh ../kafka/config/connect-standalone.properties
+../kafka/bin/connect-distributed.sh ../kafka/config/connect-distributed.properties
 ```
 
 Run the program:
