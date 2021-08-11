@@ -1,2 +1,3 @@
 python-twitter-v2
 kafka-python
+python-dotenv

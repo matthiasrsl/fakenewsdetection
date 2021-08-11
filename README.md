@@ -29,6 +29,11 @@ $ cd ..
 $ hdfs dfs -put raw_data_sample.json
 ```
 
+Starting Kafka if not running:
+```
+../kafka/bin/kafka-server-start.sh -daemon ../kafka/conf/server.properties
+```
+
 ## Running (WIP)
 Starting ElasticSearch and Kibana if they are not running:
 ```

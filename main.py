@@ -1,3 +1,5 @@
+import os
+
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import *
@@ -6,15 +8,21 @@ from preprocessing_engine import get_preprocessing_writer
 from prediction_engine import get_prediction_writer
 from postprocessing_engine import get_postprocessing_writer
 from twitter_producer import KafkaTwitterStream
+from dotenv import load_dotenv
+
+load_dotenv()
+
+KAFKA_BROKER_IP = os.environ["KAFKA_BROKER_IP"]
+TWITTER_OAUTH_BEARER_TOKEN = os.environ["TWITTER_OAUTH_BEARER_TOKEN"]
 
 
 if __name__ == "__main__":
     spark = SparkSession.builder.appName("fakenewsdetection").getOrCreate()
 
     stream = KafkaTwitterStream(
-        "localhost:9092",
+        KAFKA_BROKER_IP,
         "raw_tweets",
-        bearer_token="AAAAAAAAAAAAAAAAAAAAANUlPgEAAAAA3n%2B61l0gpELzltUuU68CusMSFy4%3D6jmJKTf0VRzglbq4KgQQfNTGaUqAueQ06WtDUcoTLi4jiq4ajI"
+        bearer_token=TWITTER_OAUTH_BEARER_TOKEN
     )
 
     preprocessing_writer = get_preprocessing_writer(spark)
