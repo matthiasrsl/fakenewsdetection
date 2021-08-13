@@ -86,7 +86,7 @@ Each producer has its own parameters that must be set in the `producers.json` fi
         },
         {
             "name": "reddit_comments",
-            "kwargs": {  /* The authentication is made as a script app. Read the Reddit API documentation for more information. */
+            "kwargs": {  
                 "client_id": "<application_client_id>",
                 "client_secret": "<application_client_secret>",
                 "password": "<password_of_account_associated_to_application>",
@@ -98,6 +98,7 @@ Each producer has its own parameters that must be set in the `producers.json` fi
     ]
 }
 ```
+Regarding the `reddit_comments` producer, the authentication is made as a script app. Read the Reddit API documentation for more information. 
 
 ## Changing the prediction model
 Changing the prediction model can be done by replacing the `models/production_model_3` directory (or adding a new directory and changing the code in `prediction_engine.py`). The directory must be created by saving a Spark ML model. This model must take a datafram column `text` as input and perform a binary classification (the output columns must therefore include `prediction` and `probability`). Any columns created by the internal stages of the model will be included in the output data, which can be undesirable.
