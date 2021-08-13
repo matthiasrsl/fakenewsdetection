@@ -4,6 +4,9 @@ from pyspark.sql.types import *
 
 
 postprocessed_predictions_schema = StructType([
+    StructField("source", StringType(), False),
+    StructField("type", StringType(), False),
+    StructField("author_id", StringType(), False),
     StructField("author_name", StringType(), False),
     StructField("author_username", StringType(), False),
     StructField("class", StringType(), False),
@@ -14,7 +17,8 @@ postprocessed_predictions_schema = StructType([
         StructField("values", ArrayType(DoubleType()), False),
     ]), False),
     StructField("text", StringType(), False),
-    StructField("tweet_id", StringType(), False),
+    StructField("document_id", StringType(), False),
+    StructField("location", ArrayType(DoubleType()), True),
 ])
 
 

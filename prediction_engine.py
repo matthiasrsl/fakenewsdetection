@@ -15,11 +15,15 @@ def format_output(prediction):
     return "FAKE" if prediction else "REAL"
 
 preprocessed_tweets_schema = StructType([
-    StructField("tweet_id", StringType(), False),
-    StructField("author_username", StringType(), False),
+    StructField("source", StringType(), False),
+    StructField("type", StringType(), False),
+    StructField("author_id", StringType(), False),
     StructField("author_name", StringType(), False),
+    StructField("author_username", StringType(), False),
     StructField("created_at", StringType(), False),
     StructField("text", StringType(), False),
+    StructField("document_id", StringType(), False),
+    StructField("location", ArrayType(DoubleType()), True),
 ])
 
 def get_prediction_writer(spark):
@@ -34,7 +38,7 @@ def get_prediction_writer(spark):
     tweets = spark.readStream.format("kafka").option(
         "kafka.bootstrap.servers", "localhost:9092"
     ).option(
-        "subscribe", "raw_tweets"
+        "subscribe", "raw_documents"
     ).option(
         "failOnDataLoss", "false"
     ).load()

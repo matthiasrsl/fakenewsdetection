@@ -7,7 +7,7 @@ from pyspark.sql.types import *
 from preprocessing_engine import get_preprocessing_writer
 from prediction_engine import get_prediction_writer
 from postprocessing_engine import get_postprocessing_writer
-from twitter_producer import KafkaTwitterStream
+from stream_producer import KafkaTwitterStream
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,7 +21,7 @@ if __name__ == "__main__":
 
     stream = KafkaTwitterStream(
         KAFKA_BROKER_IP,
-        "raw_tweets",
+        "raw_documents",
         bearer_token=TWITTER_OAUTH_BEARER_TOKEN
     )
 

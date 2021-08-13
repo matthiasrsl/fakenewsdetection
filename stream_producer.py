@@ -30,9 +30,9 @@ class KafkaTwitterStream(StreamApi):
             "author_username": author["username"],
             "author_name": author["name"],
             "text": data["data"]["text"],
-            "location": None,
+            "location": [None, None],
             "created_at": data["data"]["created_at"],
-            "tweet_id": "tweet_" + data["data"]["id"]
+            "document_id": "tweet_" + data["data"]["id"]
         }
         self.producer.send(self.topic, json.dumps(tweet, ensure_ascii=False).encode("utf-8"))
 
