@@ -19,7 +19,7 @@ TWITTER_OAUTH_BEARER_TOKEN = os.environ["TWITTER_OAUTH_BEARER_TOKEN"]
 if __name__ == "__main__":
     spark = SparkSession.builder.appName("fakenewsdetection").getOrCreate()
 
-    stream = KafkaTwitterStream(
+    twitter_stream = KafkaTwitterStream(
         KAFKA_BROKER_IP,
         "raw_documents",
         bearer_token=TWITTER_OAUTH_BEARER_TOKEN
@@ -34,10 +34,7 @@ if __name__ == "__main__":
     postprocessing_query = postprocessing_writer.start()
 
     #try:
-    stream.search_stream(
-        tweet_fields=["text", "created_at",],
-        expansions=["author_id",],
-    )
+    twitter_stream.start_stream()
     #except KeyboardInterrupt:
     #    preprocessing_query.stop()
     #    prediction_query.stop()
