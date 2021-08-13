@@ -54,6 +54,3 @@ class KafkaTwitterStream(KafkaSourceStream, StreamApi):
 
     def stop_stream(self):
         pass
-
-class RandomStream(KafkaSourceStream):
-    name = "random"
