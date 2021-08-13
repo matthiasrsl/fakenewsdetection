@@ -73,6 +73,32 @@ Here is an example of formatted data:
 {"source":"twitter", "type": "tweet", "tweet_id": "123", "author_id":"123", "author_username":"matthias", "author_name":"Matthias", "text":"The text of the element", "location": [-75.14310264, 40.05701649], "created_at":"2021-08-03T13:23:22.000Z"}
 ```
 
+## Producer configuration
+Each producer has its own parameters that must be set in the `producers.json` file. Here is an example configuration for producers `twitter` and `reddit_comments`:
+```json
+{
+    "producers":[
+        {
+            "name": "twitter",
+            "kwargs": {
+                "bearer_token": "<oauth_bearer_token>"
+            }
+        },
+        {
+            "name": "reddit_comments",
+            "kwargs": {  /* The authentication is made as a script app. Read the Reddit API documentation for more information. */
+                "client_id": "<application_client_id>",
+                "client_secret": "<application_client_secret>",
+                "password": "<password_of_account_associated_to_application>",
+                "user_agent": "<user_agent_used_to_make_the_requests>",
+                "username": "<username_of_account_associated_to_application>",
+                "subreddit_name": "<name_of_the_selected_subreddit>"
+            }
+        }
+    ]
+}
+```
+
 ## Changing the prediction model
 Changing the prediction model can be done by replacing the `models/production_model_3` directory (or adding a new directory and changing the code in `prediction_engine.py`). The directory must be created by saving a Spark ML model. This model must take a datafram column `text` as input and perform a binary classification (the output columns must therefore include `prediction` and `probability`). Any columns created by the internal stages of the model will be included in the output data, which can be undesirable.
 
