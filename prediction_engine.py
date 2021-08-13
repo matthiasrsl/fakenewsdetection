@@ -34,7 +34,7 @@ def get_prediction_writer(spark):
     tweets = spark.readStream.format("kafka").option(
         "kafka.bootstrap.servers", "localhost:9092"
     ).option(
-        "subscribe", "preprocessed_tweets"
+        "subscribe", "raw_tweets"
     ).option(
         "failOnDataLoss", "false"
     ).load()

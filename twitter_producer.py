@@ -1,3 +1,5 @@
+import json
+
 from pytwitter import StreamApi
 from pytwitter import models as md
 
@@ -16,7 +18,23 @@ class KafkaTwitterStream(StreamApi):
         :param return_json:
         :return:
         """
-        self.producer.send(self.topic, raw_data)
+        data = json.loads(raw_data.decode("utf-8"))
+        print(data)
+        users = {user["id"]:user for user in data["includes"]["users"]}
+        author = users[data["data"]["author_id"]]
+
+        tweet = {
+            "source": "twitter",
+            "type": "tweet",
+            "author_id": author["id"],
+            "author_username": author["username"],
+            "author_name": author["name"],
+            "text": data["data"]["text"],
+            "location": None,
+            "created_at": data["data"]["created_at"],
+            "tweet_id": "tweet_" + data["data"]["id"]
+        }
+        self.producer.send(self.topic, json.dumps(tweet, ensure_ascii=False).encode("utf-8"))
 
     def on_error(self, code):
         print(f"ERROR {code}")

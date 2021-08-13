@@ -29,19 +29,19 @@ if __name__ == "__main__":
     prediction_writer = get_prediction_writer(spark)
     postprocessing_writer = get_postprocessing_writer(spark)
 
-    preprocessing_query = preprocessing_writer.start()
+    #preprocessing_query = preprocessing_writer.start()
     prediction_query = prediction_writer.start()
     postprocessing_query = postprocessing_writer.start()
 
-    try:
-        stream.search_stream(
-            tweet_fields=["text", "created_at"],
-            expansions=["author_id"]
-        )
-    except KeyboardInterrupt:
-        preprocessing_query.stop()
-        prediction_query.stop()
-        postprocessing_query.stop()
+    #try:
+    stream.search_stream(
+        tweet_fields=["text", "created_at",],
+        expansions=["author_id",],
+    )
+    #except KeyboardInterrupt:
+    #    preprocessing_query.stop()
+    #    prediction_query.stop()
+    #    postprocessing_query.stop()
 
 
 
