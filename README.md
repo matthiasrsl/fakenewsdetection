@@ -66,7 +66,7 @@ Run the program:
 Custom producers can be added to get data from other data sources. Default producers include `twitter` and `reddit_comments`.
 To add a new producer, add a module in `producers/`. This module must define a class that inherits from `stream_producer.KafkaSourceStream` and define the following methods:
 - `start_stream(self)` that activates the stream. This method must start the stream and return immediately, it must not block.
-- `stop_stream` that stops the stream.
+- `stop_stream(self)` that stops the stream.
 The data from the stream must be properly formatted pushed into Kafka using the method `KafkaSourceStream.send(self, data)`
 Here is an example of formatted data:
 ```json
