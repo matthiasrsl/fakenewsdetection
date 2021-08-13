@@ -1,4 +1,6 @@
 import os
+import importlib
+import json
 
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
@@ -7,8 +9,10 @@ from pyspark.sql.types import *
 from preprocessing_engine import get_preprocessing_writer
 from prediction_engine import get_prediction_writer
 from postprocessing_engine import get_postprocessing_writer
-from stream_producer import KafkaTwitterStream
+from stream_producer import KafkaSourceStream
+from producers.twitter_producer import KafkaTwitterStream
 from dotenv import load_dotenv
+import continuous_threading
 
 load_dotenv()
 
@@ -19,13 +23,24 @@ TWITTER_OAUTH_BEARER_TOKEN = os.environ["TWITTER_OAUTH_BEARER_TOKEN"]
 if __name__ == "__main__":
     spark = SparkSession.builder.appName("fakenewsdetection").getOrCreate()
 
-    twitter_stream = KafkaTwitterStream(
-        KAFKA_BROKER_IP,
-        "raw_documents",
-        bearer_token=TWITTER_OAUTH_BEARER_TOKEN
-    )
+    tree = os.listdir("producers")
+    for filename in tree:
+        module_name = filename.replace(".py", "")
+        importlib.import_module("producers." + module_name)
 
-    preprocessing_writer = get_preprocessing_writer(spark)
+    streams = []
+
+    with open("producers.json", "r") as file:
+        producers_params = json.load(file)["producers"]
+    for params in producers_params:
+        stream = KafkaSourceStream.producers_registry[params["name"]](
+            KAFKA_BROKER_IP,
+            "raw_documents",
+            **params["kwargs"]
+        )
+        streams.append(stream)
+
+    #preprocessing_writer = get_preprocessing_writer(spark)
     prediction_writer = get_prediction_writer(spark)
     postprocessing_writer = get_postprocessing_writer(spark)
 
@@ -33,12 +48,13 @@ if __name__ == "__main__":
     prediction_query = prediction_writer.start()
     postprocessing_query = postprocessing_writer.start()
 
-    #try:
-    twitter_stream.start_stream()
-    #except KeyboardInterrupt:
-    #    preprocessing_query.stop()
-    #    prediction_query.stop()
-    #    postprocessing_query.stop()
-
-
+    for stream in streams:
+        stream.start_stream()
+    
+    try:
+        while 1:
+            pass
+    except KeyboardInterrupt:
+        for stream in streams:
+            stream.stop_stream()
 

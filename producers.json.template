@@ -1,0 +1,10 @@
+{
+    "producers":[
+        {
+            "name": "producer_name",
+            "kwargs": {
+
+            }
+        }
+    ]
+}

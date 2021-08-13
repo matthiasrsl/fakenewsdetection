@@ -2,3 +2,4 @@ __pycache__
 .env
 raw_data_schema.json
 spark-warehouse
+producers.json
