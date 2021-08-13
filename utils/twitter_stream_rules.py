@@ -1,7 +1,14 @@
+import os
+
 from pytwitter import StreamApi
+from dotenv import load_dotenv
+
+
+load_dotenv()
+TWITTER_OAUTH_BEARER_TOKEN = os.environ["TWITTER_OAUTH_BEARER_TOKEN"]
 
 stream = StreamApi(
-    bearer_token="AAAAAAAAAAAAAAAAAAAAANUlPgEAAAAA3n%2B61l0gpELzltUuU68CusMSFy4%3D6jmJKTf0VRzglbq4KgQQfNTGaUqAueQ06WtDUcoTLi4jiq4ajI"
+    bearer_token=TWITTER_OAUTH_BEARER_TOKEN
 )
 
 rules_ids = [rule.id for rule in stream.get_rules().data]
